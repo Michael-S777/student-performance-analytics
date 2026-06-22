@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "dbtlab.dbt-power-user",
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.pylint",
+    "inferrinizzard.prettier-sql-vscode",
+    "redhat.vscode-yaml",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "streetsidesoftware.code-spell-checker",
+    "oderwat.indent-rainbow",
+    "mechatroner.rainbow-csv"
+  ]
+}

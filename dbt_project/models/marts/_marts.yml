@@ -1,0 +1,52 @@
+version: 2
+
+models:
+
+  - name: dim_students
+    description: >
+      Student dimension table with lifetime academic performance metrics
+      and academic standing classification. One row per student.
+    columns:
+      - name: student_id
+        description: "Primary key — unique student identifier"
+        tests: [unique, not_null]
+      - name: full_name
+        tests: [not_null]
+      - name: email
+        tests: [unique, not_null]
+      - name: program
+        tests: [not_null]
+      - name: academic_standing
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['High Distinction', 'Distinction', 'Credit', 'Pass', 'At Risk', 'No Grade Yet']
+      - name: is_at_risk
+        tests: [not_null]
+      - name: credits_earned
+        tests: [not_null]
+
+  - name: fct_enrolments
+    description: >
+      Enrolments fact table with one row per enrolment.
+      Includes grade outcomes, student context, and course details
+      for full analytics and BI reporting.
+    columns:
+      - name: enrolment_id
+        description: "Primary key — unique enrolment identifier"
+        tests: [unique, not_null]
+      - name: student_id
+        tests: [not_null]
+      - name: course_id
+        tests: [not_null]
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['active', 'completed', 'withdrawn']
+      - name: is_completed
+        tests: [not_null]
+      - name: credits_earned
+        tests: [not_null]

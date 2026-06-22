@@ -1,0 +1,11 @@
+course_id,course_code,course_name,department,credits,semester,year,lecturer,max_capacity,is_active
+101,CS101,Introduction to Programming,Computer Science,6,1,2022,Dr. Sarah Mills,50,true
+102,CS201,Data Structures & Algorithms,Computer Science,6,2,2022,Dr. James Carter,45,true
+103,DS101,Introduction to Data Science,Data Science,6,1,2022,Prof. Linda Zhao,40,true
+104,DS201,Machine Learning Fundamentals,Data Science,6,2,2022,Prof. Linda Zhao,35,true
+105,MATH101,Calculus I,Mathematics,6,1,2022,Dr. Robert Evans,60,true
+106,MATH201,Linear Algebra,Mathematics,6,2,2022,Dr. Robert Evans,55,true
+107,CS301,Database Systems,Computer Science,6,1,2023,Dr. Sarah Mills,40,true
+108,DS301,Data Visualisation,Data Science,6,2,2023,Dr. Amy Nguyen,30,true
+109,MATH301,Statistics & Probability,Mathematics,6,1,2023,Dr. Emily Rao,50,true
+110,CS401,Software Engineering,Computer Science,6,2,2023,Dr. James Carter,35,true

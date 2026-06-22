@@ -1,0 +1,79 @@
+name: dbt CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dbt-ci:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Copy profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cp dbt_project/profiles.yml ~/.dbt/profiles.yml
+
+      - name: Install dbt packages
+        working-directory: dbt_project
+        run: dbt deps
+
+      - name: Load seed data
+        working-directory: dbt_project
+        run: dbt seed --target dev
+
+      - name: Run models
+        working-directory: dbt_project
+        run: dbt run --target dev
+
+      - name: Run tests
+        working-directory: dbt_project
+        run: dbt test --target dev
+
+      - name: Generate docs
+        working-directory: dbt_project
+        run: dbt docs generate --target dev
+
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-docs
+          path: dbt_project/target/
+          retention-days: 7
+
+  lint:
+    name: SQL Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install linting tools
+        run: pip install sqlfluff sqlfluff-templater-dbt
+
+      - name: Run SQLFluff lint
+        working-directory: dbt_project
+        run: sqlfluff lint models/ --dialect duckdb --templater dbt
+        continue-on-error: true

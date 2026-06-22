@@ -1,0 +1,137 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw source data loaded via dbt seeds"
+    schema: main_raw
+    tables:
+      - name: raw_students
+        description: "Raw student records from the student information system"
+        columns:
+          - name: student_id
+            tests: [unique, not_null]
+          - name: email
+            tests: [unique, not_null]
+          - name: enrolment_date
+            tests: [not_null]
+          - name: program
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: ['Computer Science', 'Data Science', 'Mathematics']
+
+      - name: raw_courses
+        description: "Course catalogue"
+        columns:
+          - name: course_id
+            tests: [unique, not_null]
+          - name: course_code
+            tests: [unique, not_null]
+          - name: credits
+            tests: [not_null]
+
+      - name: raw_enrolments
+        description: "Student course enrolments"
+        columns:
+          - name: enrolment_id
+            tests: [unique, not_null]
+          - name: student_id
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'raw_students')
+                    field: student_id
+          - name: course_id
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'raw_courses')
+                    field: course_id
+          - name: status
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: ['active', 'completed', 'withdrawn']
+
+      - name: raw_grades
+        description: "Assessment grades per enrolment"
+        columns:
+          - name: grade_id
+            tests: [unique, not_null]
+          - name: enrolment_id
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'raw_enrolments')
+                    field: enrolment_id
+          - name: assessment_type
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: ['assignment', 'midterm_exam', 'final_exam']
+          - name: score
+            tests: [not_null]
+          - name: weight_pct
+            tests: [not_null]
+
+models:
+  - name: stg_students
+    description: "Cleaned and typed student records"
+    columns:
+      - name: student_id
+        tests: [unique, not_null]
+      - name: full_name
+        tests: [not_null]
+      - name: email
+        tests: [unique, not_null]
+      - name: program
+        tests: [not_null]
+      - name: year_level
+        tests: [not_null]
+
+  - name: stg_courses
+    description: "Cleaned course catalogue records"
+    columns:
+      - name: course_id
+        tests: [unique, not_null]
+      - name: course_code
+        tests: [unique, not_null]
+      - name: course_name
+        tests: [not_null]
+      - name: department
+        tests: [not_null]
+
+  - name: stg_enrolments
+    description: "Cleaned student enrolment records"
+    columns:
+      - name: enrolment_id
+        tests: [unique, not_null]
+      - name: student_id
+        tests: [not_null]
+      - name: course_id
+        tests: [not_null]
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['active', 'completed', 'withdrawn']
+
+  - name: stg_grades
+    description: "Cleaned assessment grade records"
+    columns:
+      - name: grade_id
+        tests: [unique, not_null]
+      - name: enrolment_id
+        tests: [not_null]
+      - name: score
+        tests: [not_null]
+      - name: weighted_score
+        description: "Score multiplied by the assessment weight"
+        tests: [not_null]

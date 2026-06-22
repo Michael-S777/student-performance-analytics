@@ -1,0 +1,11 @@
+student_performance_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DBT_DATABASE_PATH', 'dev.duckdb') }}"
+      threads: 4
+    prod:
+      type: duckdb
+      path: "{{ env_var('DBT_DATABASE_PATH', 'prod.duckdb') }}"
+      threads: 4
