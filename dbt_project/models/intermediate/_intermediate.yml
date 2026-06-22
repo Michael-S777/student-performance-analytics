@@ -7,17 +7,16 @@ models:
       One row per enrolment. Used by both mart models.
     columns:
       - name: enrolment_id
-        tests: [unique, not_null]
+        data_tests: [unique, not_null]
       - name: student_id
-        tests: [not_null]
+        data_tests: [not_null]
       - name: course_id
-        tests: [not_null]
+        data_tests: [not_null]
       - name: status
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              arguments:
-                values: ['active', 'completed', 'withdrawn']
+              values: ['active', 'completed', 'withdrawn']
 
   - name: int_grades_aggregated
     description: >
@@ -25,14 +24,13 @@ models:
       Calculates the weighted final score and overall letter grade.
     columns:
       - name: enrolment_id
-        tests: [unique, not_null]
+        data_tests: [unique, not_null]
       - name: final_score
-        tests: [not_null]
+        data_tests: [not_null]
       - name: overall_grade
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              arguments:
-                values: ['HD', 'D', 'C', 'P', 'F']
+              values: ['HD', 'D', 'C', 'P', 'F']
       - name: is_passing
-        tests: [not_null]
+        data_tests: [not_null]
